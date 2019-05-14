@@ -119,9 +119,9 @@ sealed trait Chain[+A] {
   def toSet[B >: A]: Set[B] = foldLeft(Set.empty[B])((acc, next) => acc + next)
 
   def min[B >: A](implicit order: Ordering[B]): A =
-    reduceLeft(order.min).asInstanceOf[A]
+    reduceLeft((x, y) => if (order.lteq(x, y)) x else y)
   def max[B >: A](implicit order: Ordering[B]): A =
-    reduceLeft(order.max).asInstanceOf[A]
+    reduceLeft((x, y) => if (order.gteq(x, y)) x else y)
 
   /*
   def listify: Chain[A] = foldRight(Option.empty[Chain[A]])((element, acc) =>
